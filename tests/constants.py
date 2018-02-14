@@ -4,10 +4,12 @@ import os
 import tempfile
 import unittest
 
-from bio2bel_mgi import Manager
+from bio2bel_rgd import Manager
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 resources_path = os.path.join(dir_path, 'resources')
+
+test_rgd_orthologs_path = os.path.join(resources_path, 'RGD_ORTHOLOGS.txt')
 
 
 class DatabaseMixin(unittest.TestCase):
