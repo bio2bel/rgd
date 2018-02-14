@@ -6,9 +6,11 @@ from __future__ import print_function
 
 import pandas as pd
 import requests
+
 from pybel.constants import ORTHOLOGOUS
 from pybel.dsl import gene
-from pybel_tools.pipeline import pipeline
+from pybel_tools import pipeline
+from pybel_tools.mutation.collapse import collapse_orthologies_by_namespace
 
 __all__ = [
     'download_orthologies_from_hgnc',
@@ -149,3 +151,12 @@ def integrate_orthologies_from_rgd(graph, path=None):
     mgi_orthologies, rgd_orthologies = _structure_orthologies_from_rgd(path=path)
     _add_orthology_statements(graph, mgi_orthologies, MGI)
     _add_orthology_statements(graph, rgd_orthologies, RGD)
+
+
+@pipeline.in_place_mutator
+def collapse_rgd_to_hgnc(graph):
+    """Collapses RGD nodes to HGNC nodes in a BEL graph
+
+    :param pybel.BELGraph graph: A BEL graph
+    """
+    collapse_orthologies_by_namespace(graph, from_namespace='RGD', to_namespace='HGNC')
