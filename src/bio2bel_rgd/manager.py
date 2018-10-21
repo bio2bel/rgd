@@ -2,6 +2,8 @@
 
 from typing import Mapping, Optional
 
+import pandas as pd
+
 from bio2bel.manager import AbstractManager
 from bio2bel.manager.flask_manager import FlaskMixin
 from bio2bel.manager.namespace_manager import BELNamespaceManagerMixin
@@ -35,6 +37,14 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
     def populate(self, genes_url: Optional[str] = None) -> None:
         """Populate the database."""
         genes_df = get_genes_df(url=genes_url)
+
+        # delete entries with missing entrez identifiers
+        genes_df = genes_df[pd.notna(genes_df.entrez_id)]
+        genes_df.entrez_id = genes_df.entrez_id.map(int).map(str)
+
+        # add protein-coding to all missing entries
+        genes_df.loc[pd.isna(genes_df.gene_type), 'gene_type'] = 'protein-coding'
+
         genes_df.to_sql(Gene.__tablename__, self.engine, if_exists='append', index=False)
         self.session.commit()
 

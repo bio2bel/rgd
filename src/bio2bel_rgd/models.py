@@ -31,10 +31,10 @@ class Gene(Base):  # type: ignore
 
     id = Column(Integer, primary_key=True)
 
-    rgd_id = Column(String(255), nullable=False, index=True, doc='KEGG id of the protein')
+    rgd_id = Column(String(255), nullable=False, index=True)
     symbol = Column(String(255), nullable=False, index=True)
     name = Column(String(255), nullable=False, index=True)
-    description = Column(Text)
+    description = Column(Text, nullable=True)
     entrez_id = Column(String(255), nullable=False, index=True)
     gene_type = Column(String(255), nullable=False, index=True)
 
