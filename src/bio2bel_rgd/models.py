@@ -10,7 +10,7 @@ from .constants import MODULE_NAME
 
 Base = declarative_base()
 
-GENE_TABLE_NAME = f'{MODULE_NAME}_gene'
+GENE_TABLE_NAME = f'{MODULE_NAME}_ratGene'
 
 marker_type_to_encoding = {
     'pseudo': 'G',
@@ -24,7 +24,7 @@ marker_type_to_encoding = {
 }
 
 
-class Gene(Base):  # type: ignore
+class RatGene(Base):  # type: ignore
     """Gene table."""
 
     __tablename__ = GENE_TABLE_NAME

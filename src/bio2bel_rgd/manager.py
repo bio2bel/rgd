@@ -10,7 +10,7 @@ from bio2bel.manager.namespace_manager import BELNamespaceManagerMixin
 from pybel import BELGraph
 from pybel.manager.models import Namespace, NamespaceEntry
 from .constants import MODULE_NAME
-from .models import Base, Gene
+from .models import Base, RatGene
 from .parsers import get_genes_df
 
 
@@ -19,12 +19,19 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
 
     _base = Base
     module_name = MODULE_NAME
-    flask_admin_models = [Gene]
-    namespace_model = Gene
+
+    flask_admin_models = [RatGene]
+
+    namespace_model = RatGene
+    identifiers_recommended = 'Rat Genome Database'
+    identifiers_pattern = '^\d{4,}$'
+    identifiers_miriam = 'MIR:00000047'
+    identifiers_namespace = 'rgd'
+    identifiers_url = 'http://identifiers.org/rgd/'
 
     def count_genes(self) -> int:
         """Count the genes in the database."""
-        return self._count_model(Gene)
+        return self._count_model(RatGene)
 
     def summarize(self) -> Mapping[str, int]:
         """Summarize the database.s"""
@@ -45,24 +52,24 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
         # add protein-coding to all missing entries
         genes_df.loc[pd.isna(genes_df.gene_type), 'gene_type'] = 'protein-coding'
 
-        genes_df.to_sql(Gene.__tablename__, self.engine, if_exists='append', index=False)
+        genes_df.to_sql(RatGene.__tablename__, self.engine, if_exists='append', index=False)
         self.session.commit()
 
-    def get_gene_by_rgd_id(self, rgd_id: str) -> Optional[Gene]:
+    def get_gene_by_rgd_id(self, rgd_id: str) -> Optional[RatGene]:
         """Get a gene by its RGD gene identifier, if it exists.
 
         :param rgd_id: An RGD gene identifier (automatically strips the "RGD:" prefix if present)
         """
         raise NotImplementedError
 
-    def get_gene_by_rgd_symbol(self, rgd_symbol: str) -> Optional[Gene]:
+    def get_gene_by_rgd_symbol(self, rgd_symbol: str) -> Optional[RatGene]:
         """Get a gene by its RGD gene symbol, if it exists.
 
         :param rgd_symbol: An RGD gene symbol
         """
         raise NotImplementedError
 
-    def get_gene_by_entrez_id(self, entrez_id: str) -> Optional[Gene]:
+    def get_gene_by_entrez_id(self, entrez_id: str) -> Optional[RatGene]:
         """Get a gene by its Entrez gene identifier, if it exists.
 
         :param entrez_id: An Entrez gene identifier
@@ -73,7 +80,7 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
         """Add equivalent Entrez nodes for RGD nodes."""
         raise NotImplementedError
 
-    def _create_namespace_entry_from_model(self, gene: Gene, namespace: Namespace) -> NamespaceEntry:
+    def _create_namespace_entry_from_model(self, gene: RatGene, namespace: Namespace) -> NamespaceEntry:
         return NamespaceEntry(
             encoding=gene.bel_encoding,
             name=gene.symbol,
@@ -82,5 +89,5 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
         )
 
     @staticmethod
-    def _get_identifier(gene: Gene):
+    def _get_identifier(gene: RatGene):
         return gene.rgd_id
