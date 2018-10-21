@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""A package for converting RGD to BEL"""
+"""A package for converting RGD to BEL."""
 
 from .manager import Manager
 

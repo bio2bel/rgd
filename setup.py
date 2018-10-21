@@ -6,7 +6,7 @@ import re
 
 import setuptools
 
-BIO2BEL_MODULE = 'mgi'
+BIO2BEL_MODULE = 'rgd'
 PACKAGES = setuptools.find_packages(where='src')
 META_PATH = os.path.join('src', 'bio2bel_{}'.format(BIO2BEL_MODULE), '__init__.py')
 KEYWORDS = ['Biological Expression Language', 'BEL', 'Systems Biology', 'Networks Biology']
@@ -27,7 +27,6 @@ INSTALL_REQUIRES = [
     'click',
     'bio2bel',
     'pybel',
-    'pybel-tools',
 ]
 ENTRY_POINTS = {
     'bio2bel': [

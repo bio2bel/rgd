@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import click
+from .manager import Manager
 
-
-@click.group()
-def main():
-    pass
-
+main = Manager.get_cli()
 
 if __name__ == '__main__':
     main()

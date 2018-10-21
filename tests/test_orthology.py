@@ -5,8 +5,7 @@ import unittest
 from bio2bel_rgd.orthology import integrate_orthologies_from_rgd
 from pybel import BELGraph
 from pybel.constants import *
-from pybel_tools.mutation import collapse_orthologies_by_namespace
-from tests.constants import test_rgd_orthologs_path
+from tests.constants import TEST_ORTHOLOGS_URL
 
 HGNC = 'hgnc'
 MGI = 'mgi'
@@ -29,7 +28,7 @@ class TestOrthology(unittest.TestCase):
         self.assertEqual(4, graph.number_of_nodes())
         self.assertEqual(0, graph.number_of_edges())
 
-        integrate_orthologies_from_rgd(graph, test_rgd_orthologs_path)
+        integrate_orthologies_from_rgd(graph, TEST_ORTHOLOGS_URL)
 
         self.assertEqual(4, graph.number_of_nodes())
         self.assertEqual(1, graph.number_of_edges())
