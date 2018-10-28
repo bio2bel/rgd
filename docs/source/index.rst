@@ -2,17 +2,12 @@ Bio2BEL RGD
 ===========
 .. automodule:: bio2bel_rgd
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. automodule:: bio2bel_rgd.manager
+   :members:
 
-   enrichment
-   manager
-   constants
+.. automodule:: bio2bel_rgd.models
+   :members:
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. click:: bio2bel_rgd.cli:main
+   :prog: bio2bel_rgd
+   :show-nested:

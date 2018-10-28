@@ -11,7 +11,9 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'sphinx_click.ext',
+    'sphinx_autodoc_typehints',
 ]
 templates_path = ['_templates']
 source_suffix = '.rst'
@@ -46,7 +48,8 @@ man_pages = [
     (master_doc, 'Bio2BEL RGD', 'Bio2BEL RGD Documentation', [author], 1)
 ]
 texinfo_documents = [
-    (master_doc, 'Bio2BEL RGD', 'Bio2BEL RGD Documentation', author, 'Bio2BEL RGD', 'Serialize RGD to BEL', 'Miscellaneous'),
+    (master_doc, 'Bio2BEL RGD', 'Bio2BEL RGD Documentation', author, 'Bio2BEL RGD', 'Serialize RGD to BEL',
+     'Miscellaneous'),
 ]
 
 # Example configuration for intersphinx: refer to the Python standard library.
