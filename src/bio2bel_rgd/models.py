@@ -47,6 +47,15 @@ class RatGene(Base):  # type: ignore
 
     def __str__(self):
         return str(self.rgd_id)
+    
+    def to_json(self):
+        return {
+            'RGD Identifier': self.rgd_id,
+            'RGD Symbol': self.symbol,
+            'Name': self.name,
+            'Description': self.description,
+            'Gene Type': self.gene_type,
+        }
 
     def as_bel(self, func=None) -> pybel.dsl.CentralDogma:
         """Make a PyBEL DSL object from this gene."""
