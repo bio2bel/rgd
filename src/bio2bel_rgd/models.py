@@ -48,10 +48,11 @@ class RatGene(Base):  # type: ignore
     def __str__(self):
         return str(self.rgd_id)
 
-    def serialize_to_protein_node(self) -> pybel.dsl.Gene:
-        """Serialize to PyBEL node data dictionary."""
-        return pybel.dsl.Gene(
-            namespace='rgd',
-            name=self.symbol,
-            identifier=str(self.rgd_id)
+    def as_bel(self, func=None) -> pybel.dsl.CentralDogma:
+        """Make a PyBEL DSL object from this gene."""
+        dsl = pybel.dsl.Gene if func is None else pybel.dsl.FUNC_TO_DSL[func]
+        return dsl(
+            namespace=MODULE_NAME,
+            name=str(self.symbol),
+            identifier=str(self.rgd_id),
         )
