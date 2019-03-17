@@ -17,7 +17,7 @@ from .parsers import get_genes_df
 
 
 class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
-    """Manages the RGD database."""
+    """Rat gene nomenclature and orthologies."""
 
     _base = Base
     module_name = MODULE_NAME
@@ -37,7 +37,7 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
 
     def summarize(self) -> Mapping[str, int]:
         """Summarize the database.s"""
-        return dict(genes=self.count_genes())
+        return dict(rat_genes=self.count_genes())
 
     def is_populated(self):
         """Check if the database is populated."""
