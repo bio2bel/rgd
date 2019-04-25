@@ -126,5 +126,9 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
         )
 
     @staticmethod
-    def _get_identifier(gene: RatGene):
+    def _get_identifier(gene: RatGene) -> str:
         return gene.rgd_id
+
+    @staticmethod
+    def _get_name(gene: RatGene) -> str:
+        return gene.symbol
