@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import logging
+from typing import Iterable, Mapping, Optional, Tuple, List
+
 import networkx as nx
 import pandas as pd
-from typing import Iterable, Mapping, Optional, Tuple
+from tqdm import tqdm
 
 from bio2bel.manager import AbstractManager
 from bio2bel.manager.flask_manager import FlaskMixin
@@ -15,9 +18,15 @@ from .constants import MODULE_NAME
 from .models import Base, RatGene
 from .parsers import get_genes_df
 
+__all__ = [
+    'Manager',
+]
+
+logger = logging.getLogger(__name__)
+
 
 class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
-    """Rat gene nomenclature and orthologies."""
+    """Rat gene nomenclature."""
 
     _base = Base
     module_name = MODULE_NAME
@@ -34,6 +43,10 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
     def count_genes(self) -> int:
         """Count the genes in the database."""
         return self._count_model(RatGene)
+
+    def list_genes(self) -> List[RatGene]:
+        """List all rat genes in the database."""
+        return self._list_model(RatGene)
 
     def summarize(self) -> Mapping[str, int]:
         """Summarize the database.s"""
@@ -82,16 +95,21 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
         """Add equivalent Entrez nodes for RGD nodes."""
         raise NotImplementedError
 
-    def normalize_rat_genes(self, graph: BELGraph) -> None:
+    def normalize_rat_genes(self, graph: BELGraph, use_tqdm: bool = False) -> None:
         mapping = {
             node: gene_model.as_bel(func=node.function)
-            for node, gene_model in self.iter_rat_genes(graph)
+            for node, gene_model in self.iter_rat_genes(graph, use_tqdm=use_tqdm)
         }
         nx.relabel_nodes(graph, mapping, copy=False)
 
-    def iter_rat_genes(self, graph: BELGraph) -> Iterable[Tuple[BaseEntity, RatGene]]:
+    def iter_rat_genes(self, graph: BELGraph, use_tqdm: bool = False) -> Iterable[Tuple[BaseEntity, RatGene]]:
         """Iterate over pairs of BEL nodes and Rat genes."""
-        for node in graph:
+        it = (
+            tqdm(graph, desc='Rat genes')
+            if use_tqdm else
+            graph
+        )
+        for node in it:
             rat_gene = self.get_rat_gene_from_bel(node)
             if rat_gene is not None:
                 yield node, rat_gene
@@ -116,6 +134,8 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
                 return self.get_gene_by_rgd_id(identifier)
             else:  # elif name is not None:
                 return self.get_gene_by_rgd_symbol(name)
+
+        logger.warning('Could not map RGD node: %r', node)
 
     def _create_namespace_entry_from_model(self, gene: RatGene, namespace: Namespace) -> NamespaceEntry:
         return NamespaceEntry(

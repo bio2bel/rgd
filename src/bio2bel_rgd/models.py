@@ -43,10 +43,10 @@ class RatGene(Base):  # type: ignore
         return marker_type_to_encoding[self.gene_type]
 
     def __repr__(self):
-        return str(self.rgd_id)
+        return f'rgd:{self.rgd_id} ! {self.symbol}'
 
     def __str__(self):
-        return str(self.rgd_id)
+        return f'rgd:{self.rgd_id} ! {self.symbol}'
     
     def to_json(self):
         return {
