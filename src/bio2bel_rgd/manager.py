@@ -35,7 +35,7 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
 
     namespace_model = RatGene
     identifiers_recommended = 'Rat Genome Database'
-    identifiers_pattern = '^\d{4,}$'
+    identifiers_pattern = r'^\d{4,}$'
     identifiers_miriam = 'MIR:00000047'
     identifiers_namespace = 'rgd'
     identifiers_url = 'http://identifiers.org/rgd/'
@@ -152,3 +152,7 @@ class Manager(AbstractManager, BELNamespaceManagerMixin, FlaskMixin):
     @staticmethod
     def _get_name(gene: RatGene) -> str:
         return gene.symbol
+
+    def build_rgd_gene_symbol_to_rgd_id_mapping(self) -> Mapping[str, str]:
+        """Build a mapping from RGD symbols to their RGD identifiers."""
+        return dict(self.session.query(RatGene.symbol, RatGene.rgd_id).all())
